@@ -25,14 +25,14 @@ class TestOrder:
     @allure.title('Проверка создания заказа авторизованным пользователем')
     @allure.description('Отправляем запрос на создание заказа для авторизованного пользователя с разным числом ингредиентов')
     @pytest.mark.parametrize('num_ingredients', [1,2,3,4,5])
-    def test_create_order_authorized_user_success(self, user, ingredients, num_ingredients):
+    def test_create_order_authorized_user_success(self, signed_in_user, ingredients, num_ingredients):
        ingredients_order = [random.choice(ingredients)['_id'] for _ in range(num_ingredients)]
-       response = OrderUtils.create_order(ingredients_order, user[1])
+       response = OrderUtils.create_order(ingredients_order, signed_in_user)
        assert response.status_code == 200
        assert(response.json()["success"] == True)
        assert(int(response.json()['order']['number']) > 0)
 
-       response_orders = OrderUtils.get_order_list(user[1])
+       response_orders = OrderUtils.get_order_list(signed_in_user)
        assert response_orders.status_code == 200
        assert(response_orders.json()["success"] == True)
        assert(response_orders.json()["orders"])

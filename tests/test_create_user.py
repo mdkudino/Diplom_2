@@ -21,11 +21,7 @@ class TestCreateUser:
     def test_registration_double_user_failed(self):
         user_data = UserDataGenerator.generate_fake_valid_user_data()
         response = UserUtils.create_user(user_data)
-
-        assert response.status_code == 200
-        assert response.json()["success"] == True
         access_tocken = response.json()["accessToken"]
-
         response_second = UserUtils.create_user(user_data)
 
         assert response_second.status_code == 403

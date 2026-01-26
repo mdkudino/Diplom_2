@@ -8,8 +8,8 @@ class TestLoginUser:
 
     @allure.title('Проверка авторизации пользователя с валидными данными')
     @allure.description('Отправляем запрос на авторизацию в сервисе, проверяем ответ и удаляем пользователя')
-    def test_user_login_successfull_with_valid_data(self, user):
-        response = UserUtils.login_user(user[0])
+    def test_user_login_successfull_with_valid_data(self, created_user):
+        response = UserUtils.login_user(created_user)
         assert response.status_code == 200
         assert response.json()["success"] == True
         assert response.json()["accessToken"]
@@ -21,9 +21,9 @@ class TestLoginUser:
         "email", 
         "password"
     ])
-    def test_user_null_login_failed(self, user, incorrect_data):
-        user[0][incorrect_data] = "12345"
-        response = UserUtils.login_user(user[0])
+    def test_user_null_login_failed(self, created_user, incorrect_data):
+        created_user[incorrect_data] = "12345"
+        response = UserUtils.login_user(created_user)
         assert response.status_code == 401
         assert response.json()["success"] == False
         assert response.json()['message'] == Messages.incorrect_credentials_message
@@ -36,9 +36,9 @@ class TestLoginUser:
         "email", 
         "password"
     ])
-    def test_user_login_without_parameters_failed(self, user, empty_data):
-        user[0][empty_data] = ""
-        response = UserUtils.login_user(user[0])
+    def test_user_login_without_parameters_failed(self, created_user, empty_data):
+        created_user[empty_data] = ""
+        response = UserUtils.login_user(created_user)
         assert response.status_code == 401
         assert response.json()["success"] == False
         assert response.json()['message'] == Messages.incorrect_credentials_message
